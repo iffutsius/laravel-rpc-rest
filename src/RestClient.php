@@ -21,6 +21,9 @@ abstract class RestClient extends BaseClient
     /** @var array */
     protected $headers = ['Content-Type' => 'application/json'];
 
+    /** @var mixed */
+    protected $connectionAuth;
+
     /**
      * @var true|false|string
      *
@@ -41,7 +44,7 @@ abstract class RestClient extends BaseClient
     protected $curlOutputInterface = false;
 
     /**
-     * @inheritdoc
+     * @return Client
      */
     protected function createConnection()
     {
@@ -53,11 +56,27 @@ abstract class RestClient extends BaseClient
     }
 
     /**
+     * @return Client
+     */
+    public function getConnection()
+    {
+        return parent::getConnection();
+    }
+
+    /**
      * @return mixed
      */
     public function getBaseUrl()
     {
         return $this->baseUrl;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setConnectionAuth($value)
+    {
+        $this->connectionAuth = $value;
     }
 
     /**
@@ -161,6 +180,7 @@ abstract class RestClient extends BaseClient
     {
         try {
             $this->prepareAuth($method);
+
             $url = $this->getRequestUrlForMethod($method);
             $content = $this->prepareContent($method);
 
@@ -203,9 +223,7 @@ abstract class RestClient extends BaseClient
      */
     protected function prepareContent(RestMethod $method)
     {
-        $content = [
-            'headers' => $this->prepareHeaders($method),
-        ];
+        $content['headers'] = $this->prepareHeaders($method);
 
         $postParams = $this->preparePostParams($method->getPostParams(), $method);
         if (!empty($postParams)) {
@@ -227,6 +245,10 @@ abstract class RestClient extends BaseClient
         $queryParams = $this->prepareQueryParams($method->getQueryParams(), $method);
         if (!empty($queryParams)) {
             $content['query'] = $queryParams;
+        }
+
+        if ($this->connectionAuth) {
+            $content['auth'] = $this->connectionAuth;
         }
 
         return $content;
