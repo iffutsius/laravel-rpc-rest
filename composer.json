@@ -1,6 +1,6 @@
 {
-    "name": "iffutsius/laravel-rpc",
-    "description": "RPC library to quickle start making RPC calls to 3rd party APIs",
+    "name": "iffutsius/laravel-rpc-rest",
+    "description": "RPC library to quick start making RPC REST calls to 3rd party APIs",
     "keywords": ["laravel", "rpc", "api"],
     "homepage": "https://github.com/iffutsius/laravel-rpc",
     "license": "MIT",
