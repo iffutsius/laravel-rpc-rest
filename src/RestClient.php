@@ -2,11 +2,11 @@
 
 namespace Iffutsius\LaravelRpc;
 
+use Iffutsius\LaravelRpc\Auth\AuthInterface;
 use Iffutsius\LaravelRpc\Exceptions\ClientException;
 use Iffutsius\LaravelRpc\Exceptions\NotFoundException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 
@@ -15,8 +15,8 @@ abstract class RestClient extends BaseClient
     /** @var string */
     protected $baseUrl;
 
-    /** @var string */
-    protected $authToken;
+    /** @var AuthInterface */
+    protected $auth;
 
     /** @var array */
     protected $headers = ['Content-Type' => 'application/json'];
@@ -160,6 +160,7 @@ abstract class RestClient extends BaseClient
     public function sendMethod($method)
     {
         try {
+            $this->prepareAuth($method);
             $url = $this->getRequestUrlForMethod($method);
             $content = $this->prepareContent($method);
 
@@ -175,17 +176,25 @@ abstract class RestClient extends BaseClient
 
     /**
      * @param RestMethod $method
+     */
+    protected function prepareAuth($method)
+    {
+        if (!$method->authEnabled()) {
+            return;
+        }
+
+        if ($this->auth) {
+            $this->auth->authorize($this);
+        }
+    }
+
+    /**
+     * @param RestMethod $method
      * @return array
      */
     protected function prepareHeaders($method)
     {
-        $headers = array_merge($this->getHeaders(), $method->getHeaders());
-
-        if (!empty($this->authToken) && !$method->disableAuthToken()) {
-            $headers['Authorization'] = 'Bearer ' . $this->authToken;
-        }
-
-        return $headers;
+        return array_merge($this->getHeaders(), $method->getHeaders());
     }
 
     /**

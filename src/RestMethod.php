@@ -129,9 +129,9 @@ abstract class RestMethod extends BaseMethod
     /**
      * @return boolean
      */
-    public function disableAuthToken()
+    public function authEnabled()
     {
-        return false;
+        return true;
     }
 
     /**
