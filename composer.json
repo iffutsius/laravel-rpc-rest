@@ -1,0 +1,32 @@
+{
+    "name": "iffutsius/laravel-rpc",
+    "description": "RPC library to quickle start making RPC calls to 3rd party APIs",
+    "keywords": ["laravel", "rpc", "api"],
+    "homepage": "https://github.com/iffutsius/laravel-rpc",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Ivo Hindreus",
+        "email": "iffutsius@gmail.com",
+        "homepage": "https://github.com/iffutsius",
+        "role": "Creator"
+      }
+    ],
+    "require": {
+        "php": "^7.3|^8.0",
+        "guzzlehttp/guzzle": "^6.5.5|^7.0.1",
+        "laravel/framework": "^8.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "Iffutsius\\LaravelRpc\\": "src/"
+      }
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+            "Iffutsius\\LaravelRpc\\RpcServiceProvider"
+        ]
+      }
+    }
+}
