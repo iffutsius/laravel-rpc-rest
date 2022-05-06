@@ -9,7 +9,7 @@ abstract class BaseClient
 {
     use KnowsOwnName;
 
-    /** @var static */
+    /** @var mixed */
     protected $connection;
 
     /**
@@ -21,7 +21,7 @@ abstract class BaseClient
     }
 
     /**
-     * @return static
+     * @return mixed
      */
     public function getConnection()
     {

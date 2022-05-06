@@ -33,6 +33,6 @@ class LogRpc
      */
     protected function writeToFile($text)
     {
-        file_put_contents($this->getLogFile(), "\n[" . date('Y-m-d H:i:s') . "] $text\n", FILE_APPEND);
+        file_put_contents($this->getLogFile(), "\n[" . date('Y-m-d H:i:s') . "] $text", FILE_APPEND);
     }
 }

@@ -173,8 +173,10 @@ abstract class RestClient extends BaseClient
     /**
      * @param RestMethod $method
      * @return mixed|ResponseInterface
+     *
      * @throws ClientException
      * @throws NotFoundException
+     * @throws BadResponseException
      */
     public function sendMethod($method)
     {
@@ -191,6 +193,7 @@ abstract class RestClient extends BaseClient
             if ($e->getCode() == 404) {
                 throw new NotFoundException($e->getMessage(), $e->getCode(), $method);
             }
+            throw $e; // don't miss the exception
         }
     }
 

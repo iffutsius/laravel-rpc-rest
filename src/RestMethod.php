@@ -2,6 +2,7 @@
 
 namespace Iffutsius\LaravelRpc;
 
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -62,6 +63,11 @@ abstract class RestMethod extends BaseMethod
      * @var Response
      */
     protected $rawResponse;
+
+    /**
+     * @var boolean
+     */
+    protected $isErrorResponse = false;
 
     /**
      * @return string
@@ -249,7 +255,14 @@ abstract class RestMethod extends BaseMethod
     public function send()
     {
         $this->validate();
-        $this->rawResponse = $this->client->sendMethod($this);
+
+        try {
+            $this->rawResponse = $this->client->sendMethod($this);
+        } catch (BadResponseException $e) {
+            $this->isErrorResponse = true;
+            $this->rawResponse = $e->getResponse();
+        }
+
         $this->setResponse($this->rawResponse);
 
         return $this;
